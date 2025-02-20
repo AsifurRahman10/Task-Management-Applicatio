@@ -1,7 +1,14 @@
-import { Outlet } from "react-router";
+import { Navigate, Outlet } from "react-router";
 import Navbar from "../Component/Navbar/Navbar";
+import { useContext } from "react";
+import { AuthContext } from "../Provider/AuthProvider";
 
 export default function MainLayout() {
+  const { user } = useContext(AuthContext);
+  console.log(user);
+  if (!user?.displayName) {
+    return <Navigate to="/login"></Navigate>;
+  }
   return (
     <div>
       <Navbar />
