@@ -23,8 +23,16 @@ async function run() {
 
     // collections
     const tasksCollection = client.db("taskDB").collection("tasks");
+    const userCollection = client.db("taskDB").collection("users");
 
     try {
+
+        // add user
+        app.post('/user', async (req, res) => {
+            const userData = req.body;
+            const result = await userCollection.insertOne(userData);
+            res.send(result);
+        })
 
         // add a task
         app.post('/add-task', async (req, res) => {

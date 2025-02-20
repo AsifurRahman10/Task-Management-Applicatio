@@ -13,6 +13,7 @@ import { closeModal, handleOpenModal } from "../utils/utils";
 
 export default function MainLayout() {
   const { user, loading } = useContext(AuthContext);
+  console.log(user);
 
   // get all the data
   const {

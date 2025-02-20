@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../Provider/AuthProvider";
 import { Link, useNavigate } from "react-router";
 import GoogleLogin from "../Component/GoogleLogin/GoogleLogin";
+import axios from "axios";
 
 export default function Register() {
   const { emailRegistration, updateProfileNamePhoto } = useContext(AuthContext);
@@ -24,7 +25,15 @@ export default function Register() {
     // register on firebase
     emailRegistration(email, password).then((res) => {
       updateProfileNamePhoto(name).then((res) => {
-        navigate("/");
+        const name = res?.user?.displayName;
+        const email = res?.user?.email;
+        const userID = res?.user?.uid;
+        const userData = { name, email, userID };
+        axios
+          .post(`${import.meta.env.VITE_Server_url}/user`, userData)
+          .then((res) => {
+            navigate("/");
+          });
       });
     });
   };
