@@ -75,6 +75,7 @@ export default function MainLayout() {
       .then((res) => {
         refetch();
         closeModal("modelConfirm");
+        form.reset();
       });
   };
 
@@ -101,10 +102,10 @@ export default function MainLayout() {
             <TodoSection todoTasks={todoTasks} refetch={refetch} />
 
             {/* inProgress section */}
-            <InProgress inProgressTasks={inProgressTasks} />
+            <InProgress inProgressTasks={inProgressTasks} refetch={refetch} />
 
             {/* completed section */}
-            <CompletedSection />
+            <CompletedSection doneTasks={doneTasks} refetch={refetch} />
 
             {/* modal */}
 

@@ -21,7 +21,7 @@ export const TaskCard = ({ item, refetch }) => {
       title,
       description,
       Timestamp: new Date(),
-      category: "to-do",
+      category: item?.category,
       order: Date.now(),
     };
     axios
@@ -30,6 +30,7 @@ export const TaskCard = ({ item, refetch }) => {
         console.log(res.data);
         refetch();
         setIsOpen(false);
+        form.reset();
       });
   };
   const handleDelete = () => {

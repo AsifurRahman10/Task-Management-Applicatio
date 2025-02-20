@@ -3,24 +3,6 @@ import { closeModal } from "../../utils/utils";
 import { Button, Field, Input, Label, Textarea } from "@headlessui/react";
 
 export default function UpdateModal({ item, handleConfirmUpdate }) {
-  // const handleConfirmUpdate = (e) => {
-  //   e.preventDefault();
-  //   const form = e.target;
-  //   const title = form.taskTitle.value;
-  //   const description = form.taskDescription.value;
-  //   const taskData = {
-  //     title,
-  //     description,
-  //     Timestamp: new Date(),
-  //     category: "to-do",
-  //     order: Date.now(),
-  //   };
-  //   axios
-  //     .patch(`${import.meta.env.VITE_Server_url}/task/${item?._id}`, taskData)
-  //     .then((res) => {
-  //       console.log(res.data);
-  //     });
-  // };
   return (
     <div
       id="modelConfirmUpdate"
