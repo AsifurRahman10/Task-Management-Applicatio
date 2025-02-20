@@ -56,7 +56,6 @@ const AuthProvider = ({ children }) => {
       if (currentUser?.email) {
         setUser(currentUser);
       } else {
-        console.log(currentUser);
         setUser(null);
       }
 

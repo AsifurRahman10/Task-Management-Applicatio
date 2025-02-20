@@ -1,20 +1,30 @@
 import { IoClose } from "react-icons/io5";
 import { MdEdit } from "react-icons/md";
+import { handleOpenModal } from "../../utils/utils";
+import UpdateModal from "../UpdateModal/UpdateModal";
+import { useState } from "react";
 
-export const TaskCard = () => {
+export const TaskCard = ({ item }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const handleEditTask = () => {
+    setIsOpen(true);
+    handleOpenModal("modelConfirmUpdate");
+  };
   return (
     <div className="bg-[#ffffff] p-5 text-black rounded-lg relative">
-      <h5 className="text-gray-900 font-bold text-lg">Design User Interface</h5>
+      <h5 className="text-gray-900 font-bold text-lg">{item?.title}</h5>
       <p className="mt-2 text-gray-500 font-medium text-sm">
-        Create wireframes and high-fidelity designs for the app's main
-        screens.Create wireframes and high-fidelity designs for the app's main
-        screens.Create wireframes and high-fidelity designs for the app's main
-        screens.
+        {item?.description}
       </p>
       <div className="absolute top-5 right-4 flex justify-center items-center gap-1">
-        <MdEdit className="text-2xl hover:text-blue-600 cursor-pointer" />
+        <MdEdit
+          onClick={handleEditTask}
+          className="text-2xl hover:text-blue-600 cursor-pointer"
+        />
         <IoClose className="text-3xl hover:text-red-500 cursor-pointer" />
       </div>
+      {/* Show modal only when isOpen is true */}
+      {isOpen && <UpdateModal item={item} onClose={() => setIsOpen(false)} />}
     </div>
   );
 };

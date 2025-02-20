@@ -37,7 +37,7 @@ async function run() {
 
         // get all task
         app.get('/all-tasks', async (req, res) => {
-            const result = await tasksCollection.find().toArray();
+            const result = await tasksCollection.find().sort({ order: -1 }).toArray();
             res.send(result);
         })
 
