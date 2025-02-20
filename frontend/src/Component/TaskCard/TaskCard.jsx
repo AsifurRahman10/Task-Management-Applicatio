@@ -3,12 +3,34 @@ import { MdEdit } from "react-icons/md";
 import { handleOpenModal } from "../../utils/utils";
 import UpdateModal from "../UpdateModal/UpdateModal";
 import { useState } from "react";
+import axios from "axios";
 
-export const TaskCard = ({ item }) => {
+export const TaskCard = ({ item, refetch }) => {
   const [isOpen, setIsOpen] = useState(false);
   const handleEditTask = () => {
     setIsOpen(true);
     handleOpenModal("modelConfirmUpdate");
+  };
+
+  const handleConfirmUpdate = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const title = form.taskTitle.value;
+    const description = form.taskDescription.value;
+    const taskData = {
+      title,
+      description,
+      Timestamp: new Date(),
+      category: "to-do",
+      order: Date.now(),
+    };
+    axios
+      .patch(`${import.meta.env.VITE_Server_url}/task/${item?._id}`, taskData)
+      .then((res) => {
+        console.log(res.data);
+        refetch();
+        setIsOpen(false);
+      });
   };
   return (
     <div className="bg-[#ffffff] p-5 text-black rounded-lg relative">
@@ -24,7 +46,9 @@ export const TaskCard = ({ item }) => {
         <IoClose className="text-3xl hover:text-red-500 cursor-pointer" />
       </div>
       {/* Show modal only when isOpen is true */}
-      {isOpen && <UpdateModal item={item} onClose={() => setIsOpen(false)} />}
+      {isOpen && (
+        <UpdateModal handleConfirmUpdate={handleConfirmUpdate} item={item} />
+      )}
     </div>
   );
 };

@@ -7,7 +7,7 @@ require('dotenv').config()
 app.use(express.json());
 app.use(cors());
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.kzomg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
@@ -25,19 +25,32 @@ async function run() {
     const tasksCollection = client.db("taskDB").collection("tasks");
 
     try {
-        // saca
 
         // add a task
         app.post('/add-task', async (req, res) => {
-            console.log(req.body);
             const taskData = req.body;
             const result = await tasksCollection.insertOne(taskData);
             res.send(result);
         })
 
         // get all task
-        app.get('/all-tasks', async (req, res) => {
-            const result = await tasksCollection.find().sort({ order: -1 }).toArray();
+        app.get('/all-tasks/:email', async (req, res) => {
+            const email = req.params.email;
+            console.log(email);
+            const query = { email: email };
+            const result = await tasksCollection.find(query).sort({ order: -1 }).toArray();
+            res.send(result);
+        })
+
+        // update existing task
+        app.patch('/task/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updatedData = req.body;
+            const updatedTask = {
+                $set: updatedData
+            }
+            const result = await tasksCollection.updateOne(filter, updatedTask);
             res.send(result);
         })
 

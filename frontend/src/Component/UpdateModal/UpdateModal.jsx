@@ -1,7 +1,26 @@
+import axios from "axios";
 import { closeModal } from "../../utils/utils";
 import { Button, Field, Input, Label, Textarea } from "@headlessui/react";
 
-export default function UpdateModal({ handleEditTask, item }) {
+export default function UpdateModal({ item, handleConfirmUpdate }) {
+  // const handleConfirmUpdate = (e) => {
+  //   e.preventDefault();
+  //   const form = e.target;
+  //   const title = form.taskTitle.value;
+  //   const description = form.taskDescription.value;
+  //   const taskData = {
+  //     title,
+  //     description,
+  //     Timestamp: new Date(),
+  //     category: "to-do",
+  //     order: Date.now(),
+  //   };
+  //   axios
+  //     .patch(`${import.meta.env.VITE_Server_url}/task/${item?._id}`, taskData)
+  //     .then((res) => {
+  //       console.log(res.data);
+  //     });
+  // };
   return (
     <div
       id="modelConfirmUpdate"
@@ -34,7 +53,7 @@ export default function UpdateModal({ handleEditTask, item }) {
           <h4 className="text-lg font-bold mb-2 text-blue-950">
             Update Task details
           </h4>
-          <form className="space-y-6 w-full" onSubmit={handleEditTask}>
+          <form className="space-y-6 w-full" onSubmit={handleConfirmUpdate}>
             {/* Task Title Field */}
             <Field>
               <Label className="text-sm font-medium text-gray-900">

@@ -23,11 +23,13 @@ export default function MainLayout() {
     queryKey: ["tasks"],
     queryFn: async () => {
       const res = await axios.get(
-        `${import.meta.env.VITE_Server_url}/all-tasks`
+        `${import.meta.env.VITE_Server_url}/all-tasks/${user?.email}`
       );
       return res.data;
     },
+    enabled: !!user?.email,
   });
+
   // loading if user is loading
   if (loading || isLoading) {
     return (
@@ -39,6 +41,7 @@ export default function MainLayout() {
       </div>
     );
   }
+
   // navigate to login if user is not available
   if (!user?.displayName) {
     return <Navigate to="/login"></Navigate>;
@@ -56,6 +59,7 @@ export default function MainLayout() {
       Timestamp: new Date(),
       category: "to-do",
       order: Date.now(),
+      email: user.email,
     };
 
     // sending data to db
@@ -87,7 +91,7 @@ export default function MainLayout() {
           {/* main section */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
             {/* todo section */}
-            <TodoSection todo={todo} />
+            <TodoSection todo={todo} refetch={refetch} />
 
             {/* inProgress section */}
             <InProgress />
