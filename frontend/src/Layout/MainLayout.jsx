@@ -2,18 +2,12 @@ import { Navigate } from "react-router";
 import Navbar from "../Component/Navbar/Navbar";
 import { useContext } from "react";
 import { AuthContext } from "../Provider/AuthProvider";
-import {
-  Button,
-  Description,
-  Field,
-  Input,
-  Label,
-  Textarea,
-} from "@headlessui/react";
+import { Button, Field, Input, Label, Textarea } from "@headlessui/react";
 import TodoSection from "../Component/TodoSection/TodoSection";
 import InProgress from "../Component/InProgress/InProgress";
 import CompletedSection from "../Component/CompletedSection/CompletedSection";
-import clsx from "clsx";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 export default function MainLayout() {
   const { user, loading } = useContext(AuthContext);
@@ -32,7 +26,7 @@ export default function MainLayout() {
   if (!user?.displayName) {
     return <Navigate to="/login"></Navigate>;
   }
-  // modal
+  // open modal
   const handleOpenModal = (modalId) => {
     const modal = document.getElementById(modalId);
     if (modal) {
@@ -41,12 +35,35 @@ export default function MainLayout() {
     }
   };
 
+  // close modal
   const closeModal = (modalId) => {
     const modal = document.getElementById(modalId);
     if (modal) {
       modal.style.display = "none";
       document.body.classList.remove("overflow-y-hidden");
     }
+  };
+  // handle add task
+  const handleAddTask = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const title = form.taskTitle.value;
+    const description = form.taskDescription.value;
+    const taskData = {
+      title,
+      description,
+      Timestamp: new Date(),
+      category: "to-do",
+      order: Date.now(),
+    };
+
+    // sending data to db
+    axios
+      .post(`${import.meta.env.VITE_Server_url}/add-task`, taskData)
+      .then((res) => {
+        console.log(res.data);
+        closeModal();
+      });
   };
 
   return (
@@ -110,13 +127,14 @@ export default function MainLayout() {
                   <h4 className="text-lg font-bold mb-2 text-blue-950">
                     Enter Task details
                   </h4>
-                  <form className="space-y-6  w-full">
+                  <form className="space-y-6 w-full" onSubmit={handleAddTask}>
                     {/* Task Title Field */}
                     <Field>
                       <Label className="text-sm font-medium text-gray-900">
                         Task Title
                       </Label>
                       <Input
+                        name="taskTitle"
                         placeholder="Enter task title"
                         className="mt-2 block w-full rounded-lg border-gray-300 bg-white px-4 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
                       />
@@ -128,13 +146,14 @@ export default function MainLayout() {
                         Task Description
                       </Label>
                       <Textarea
+                        name="taskDescription"
                         placeholder="Enter task description"
                         rows="4"
                         className="mt-2 block w-full rounded-lg border-gray-300 bg-white px-4 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
                       />
                     </Field>
                     <Button
-                      onClick={() => closeModal("modelConfirm")}
+                      type="submit"
                       className="text-white bg-[#4186F4] focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2 text-center mr-2"
                     >
                       Yes, I'm sure

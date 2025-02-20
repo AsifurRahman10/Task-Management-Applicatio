@@ -1,9 +1,11 @@
 const express = require('express')
-const app = express()
+const app = express();
+const cors = require("cors");
 const port = 3000;
 require('dotenv').config()
 
 app.use(express.json());
+app.use(cors());
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
@@ -24,22 +26,20 @@ async function run() {
 
     try {
         // saca
+
         // add a task
         app.post('/add-task', async (req, res) => {
+            console.log(req.body);
             const taskData = req.body;
             const result = await tasksCollection.insertOne(taskData);
             res.send(result);
         })
-        // add a task
-        app.post('/add-task', async (req, res) => {
-            const taskData = req.body;
-            const result = await tasksCollection.insertOne(taskData);
+
+        // get all task
+        app.get('/all-tasks', async (req, res) => {
+            const result = await tasksCollection.find().toArray();
             res.send(result);
         })
-
-
-
-
 
 
         // Connect the client to the server	(optional starting in v4.7)
