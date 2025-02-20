@@ -16,7 +16,7 @@ export default function MainLayout() {
 
   // get all the data
   const {
-    data: todo = [],
+    data: tasks = [],
     isLoading,
     refetch,
   } = useQuery({
@@ -29,6 +29,13 @@ export default function MainLayout() {
     },
     enabled: !!user?.email,
   });
+
+  // filter data category wise
+  const todoTasks = tasks.filter((task) => task.category === "to-do");
+  const inProgressTasks = tasks.filter(
+    (task) => task.category === "in-progress"
+  );
+  const doneTasks = tasks.filter((task) => task.category === "completed");
 
   // loading if user is loading
   if (loading || isLoading) {
@@ -91,10 +98,10 @@ export default function MainLayout() {
           {/* main section */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
             {/* todo section */}
-            <TodoSection todo={todo} refetch={refetch} />
+            <TodoSection todoTasks={todoTasks} refetch={refetch} />
 
             {/* inProgress section */}
-            <InProgress />
+            <InProgress inProgressTasks={inProgressTasks} />
 
             {/* completed section */}
             <CompletedSection />

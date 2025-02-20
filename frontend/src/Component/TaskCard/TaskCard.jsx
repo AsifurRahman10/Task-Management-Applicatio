@@ -32,6 +32,15 @@ export const TaskCard = ({ item, refetch }) => {
         setIsOpen(false);
       });
   };
+  const handleDelete = () => {
+    axios
+      .delete(`${import.meta.env.VITE_Server_url}/task/${item?._id}`)
+      .then((res) => {
+        console.log(res.data);
+        refetch();
+      });
+  };
+
   return (
     <div className="bg-[#ffffff] p-5 text-black rounded-lg relative">
       <h5 className="text-gray-900 font-bold text-lg">{item?.title}</h5>
@@ -43,7 +52,10 @@ export const TaskCard = ({ item, refetch }) => {
           onClick={handleEditTask}
           className="text-2xl hover:text-blue-600 cursor-pointer"
         />
-        <IoClose className="text-3xl hover:text-red-500 cursor-pointer" />
+        <IoClose
+          onClick={handleDelete}
+          className="text-3xl hover:text-red-500 cursor-pointer"
+        />
       </div>
       {/* Show modal only when isOpen is true */}
       {isOpen && (
