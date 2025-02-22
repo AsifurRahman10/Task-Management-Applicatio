@@ -34,6 +34,21 @@ A **mobile-responsive** To-Do application where users can **log in to track thei
 ## 📦 Installation & Setup
 
 1. Clone the repository:
+
    ```sh
    git clone https://github.com/your-username/your-repo-name.git
+   ```
+
+2. Navigate to the project folder
+   ```sh
+   cd your-repo-name
+   ```
+3. Install dependencies:
+   ```sh
+   npm install
+   ```
+4. Start the development server
+
+   ```sh
+   npm run dev
    ```
