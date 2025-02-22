@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
 import { useNavigate } from "react-router";
+import axios from "axios";
 
 export default function GoogleLogin() {
   const { handleGoogleLogin } = useContext(AuthContext);
@@ -8,7 +9,22 @@ export default function GoogleLogin() {
   // login through google
   const googleLogin = () => {
     handleGoogleLogin().then((res) => {
-      navigate("/");
+      const name = res?.user?.displayName;
+      const email = res?.user?.email;
+      const userID = res?.user?.uid;
+      const userData = { name, email, userID };
+      axios
+        .post(`${import.meta.env.VITE_Server_url}/user`, userData)
+        .then((res) => {
+          navigate("/");
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 409) {
+            // User already exists, just navigate
+            navigate("/");
+          } else {
+          }
+        });
     });
   };
   return (

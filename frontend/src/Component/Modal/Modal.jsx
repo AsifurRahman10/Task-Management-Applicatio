@@ -42,6 +42,7 @@ export const Modal = ({ handleAddTask }) => {
               </Label>
               <Input
                 name="taskTitle"
+                maxLength="50"
                 placeholder="Enter task title"
                 className="mt-2 block w-full rounded-lg border-gray-300 bg-white px-4 py-2 text-sm shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
               />
@@ -53,6 +54,7 @@ export const Modal = ({ handleAddTask }) => {
                 Task Description
               </Label>
               <Textarea
+                maxLength="200"
                 name="taskDescription"
                 placeholder="Enter task description"
                 rows="4"

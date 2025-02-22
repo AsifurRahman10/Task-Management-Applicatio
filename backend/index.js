@@ -30,14 +30,37 @@ async function run() {
         // add user
         app.post('/user', async (req, res) => {
             const userData = req.body;
+
+            // check if the user if available
+            const email = userData.email;
+            const isAvailable = await userCollection.findOne({ email });
+
+            if (isAvailable) {
+                return res.status(409).send({ message: "User already exists" });
+            }
+
+            // if new
             const result = await userCollection.insertOne(userData);
             res.send(result);
         })
 
         // add a task
         app.post('/add-task', async (req, res) => {
-            const taskData = req.body;
-            const result = await tasksCollection.insertOne(taskData);
+            const { title, description, category, email, timestamp } = req.body;
+            // get the last order
+            const lastTask = await tasksCollection.find({ category }).sort({ order: -1 }).limit(1).toArray();
+
+            const newOrder = lastTask.length > 0 ? lastTask[0].order + 1 : 1
+
+            const newTask = {
+                title,
+                description,
+                timestamp,
+                category,
+                order: lastTask.length > 0 ? lastTask[0].order + 1 : 1,
+                email
+            };
+            const result = await tasksCollection.insertOne(newTask);
             res.send(result);
         })
 
@@ -59,6 +82,10 @@ async function run() {
             }
             const result = await tasksCollection.updateOne(filter, updatedTask);
             res.send(result);
+        })
+
+        app.patch('/task/update-order/:id', async (req, res) => {
+
         })
 
         // update category

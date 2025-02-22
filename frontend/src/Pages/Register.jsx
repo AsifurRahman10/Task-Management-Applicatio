@@ -8,34 +8,43 @@ export default function Register() {
   const { emailRegistration, updateProfileNamePhoto } = useContext(AuthContext);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const handleRegistration = (e) => {
+  const handleRegistration = async (e) => {
     setError("");
     e.preventDefault();
+
     const form = e.target;
     const name = form.name.value;
     const email = form.email.value;
     const password = form.password.value;
 
-    // password validation
+    // Password validation
     if (!/^(?=.*[a-z])(?=.*[A-Z]).{6,}$/.test(password)) {
-      setError("password error");
+      setError(
+        "Password must be at least 6 characters long and include both uppercase and lowercase letters."
+      );
       return;
     }
 
-    // register on firebase
-    emailRegistration(email, password).then((res) => {
-      updateProfileNamePhoto(name).then((res) => {
-        const name = res?.user?.displayName;
-        const email = res?.user?.email;
-        const userID = res?.user?.uid;
-        const userData = { name, email, userID };
-        axios
-          .post(`${import.meta.env.VITE_Server_url}/user`, userData)
-          .then((res) => {
-            navigate("/");
-          });
-      });
-    });
+    try {
+      // Register user on Firebase
+      const res = await emailRegistration(email, password);
+      await updateProfileNamePhoto(name);
+
+      // Get user details
+      const userID = res.user.uid;
+      const userData = { name, email, userID };
+
+      // Send user data to the server
+      await axios.post(`${import.meta.env.VITE_Server_url}/user`, userData);
+
+      navigate("/");
+    } catch (error) {
+      if (error.response && error.response.status === 409) {
+        // User already exists, just navigate
+        navigate("/");
+      } else {
+      }
+    }
   };
   return (
     <div className="flex flex-col justify-center items-center">

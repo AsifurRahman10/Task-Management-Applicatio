@@ -16,25 +16,25 @@ const AuthContext = createContext();
 const googleProvider = new GoogleAuthProvider();
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, useLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [emailValue, setEmailValue] = useState("");
   const [userProfile, setUserProfile] = useState(null);
 
   // google login
   const handleGoogleLogin = () => {
-    useLoading(true);
+    setLoading(true);
     return signInWithPopup(auth, googleProvider);
   };
 
   //   email login
   const loginWithEmail = (email, password) => {
-    useLoading(true);
+    setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
   //   register with email
   const emailRegistration = (email, password) => {
-    useLoading(true);
+    setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
@@ -60,7 +60,7 @@ const AuthProvider = ({ children }) => {
         setUser(null);
       }
 
-      useLoading(false);
+      setLoading(false);
     });
     return () => unsubscribe();
   }, []);
@@ -74,7 +74,7 @@ const AuthProvider = ({ children }) => {
     setUser,
     handleSignout,
     emailValue,
-    useLoading,
+    setLoading,
     setUserProfile,
     userProfile,
   };
